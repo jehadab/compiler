@@ -1,0 +1,15 @@
+func() {
+  var x = 0;
+  for(var i = 0 ; i < 40 ; i+=5){
+
+    if(i < 9*2){
+      ++x;
+    }
+    else{
+      --x;
+    }
+
+  }
+
+ return 9 < 6 & x > 6;
+}

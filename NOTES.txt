@@ -1,0 +1,10 @@
+- print () ;
+
+-break;
+
+-continue;
+
+-foreach can take var without []
+
+-subquerry
+

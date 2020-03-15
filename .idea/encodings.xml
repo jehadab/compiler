@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/Java/AST/FunctionDeclaration.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Java/AST/Node.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Java/AST/Parse.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Java/Main.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/SQL.g4" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQL.interp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQL.tokens" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLBaseListener.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLBaseVisitor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLLexer.interp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLLexer.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLLexer.tokens" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLListener.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLParser.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLParser.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/generated/SQLVisitor.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/test.g4" charset="UTF-8" />
+    <file url="PROJECT" charset="windows-1256" />
+  </component>
+</project>
