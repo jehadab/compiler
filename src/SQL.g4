@@ -957,7 +957,6 @@ any_name
      indisde_the_print:
       ( IDENTIFIER |use_random_name | call_function |varible_from_object| array_base_form_with_index )
      ;
-    p:;
    /* indisde_the_print_part1:
         ((use_random_name|call_function|varible_from_object| array_base_form_with_index) PLUS)
     ;
