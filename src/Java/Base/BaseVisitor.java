@@ -2124,6 +2124,7 @@ public class BaseVisitor extends SQLBaseVisitor {
                 if(i ==  0 ){
                     expression_list.setLeft_expr(left_expr);
 
+
                 }
                 if(i == 1){
 
