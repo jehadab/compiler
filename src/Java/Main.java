@@ -8,11 +8,18 @@ import Java.Base.BaseVisitor;
 import generated.SQLBaseListener;
 import generated.SQLLexer;
 import generated.SQLParser;
+import netscape.javascript.JSObject;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.omg.CORBA.OBJ_ADAPTER;
+import org.*;
 
+import javax.json.*;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 import static org.antlr.v4.runtime.CharStreams.fromFileName;
 
@@ -23,7 +30,7 @@ public class Main {
             String source = "samples//samples.txt";
             CharStream cs = fromFileName(source);
             SQLLexer lexer = new SQLLexer(cs);
-            CommonTokenStream token  = new CommonTokenStream(lexer);
+            CommonTokenStream token = new CommonTokenStream(lexer);
             SQLParser parser = new SQLParser(token);
             ParseTree tree = parser.parse();
             Parse p = (Parse) new BaseVisitor().visit(tree);
@@ -33,5 +40,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }

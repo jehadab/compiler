@@ -1,8 +1,9 @@
 package Java.AST.instruction.Returning;
 
 import Java.AST.instruction.arithmetic_infunction_statment;
+import Java.AST.instruction.non_functional_instructions;
 
-public class returnes_rule   {
+public class returnes_rule extends non_functional_instructions {
     return_type t ;
 
     public void setT(return_type t) {

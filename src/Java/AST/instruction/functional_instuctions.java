@@ -1,5 +1,7 @@
 package Java.AST.instruction;
 
+import Java.AST.instruction.Returning.exting_oop;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,5 +27,14 @@ public class functional_instuctions extends  instructions {
     }
 
     List<instructions> instructions;
+
+    public exting_oop getLoop() {
+        return loop;
+    }
+
+    public void setLoop(exting_oop loop) {
+        this.loop = loop;
+    }
+    exting_oop loop;
 
 }

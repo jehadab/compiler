@@ -22,7 +22,7 @@ public class visite_args extends SQLBaseVisitor {
         for(int i=0;i<arg.size();i++)
         {
            /// arg.add(visitGrnral_creating(ctx.grnral_creating()));
-            temp.setCreating(visitGrnral_creating(ctx.grnral_creating()));
+           // temp.setCreating(visitGrnral_creating(ctx.grnral_creating()));
             arg.add(temp);
         }
         return arg;

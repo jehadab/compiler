@@ -851,6 +851,9 @@ any_name
  ;
 
 // start section instraction and functions defination --------------------------------------------------------------
+
+
+
   funtion:
        (  K_FUNCTION?
        function_header
@@ -861,38 +864,34 @@ any_name
 
          use_random_name
          OPEN_PAR
-         (( args (COMMA args)*)(COMMA (creating_with_assign))*)*
+         (( args (COMMA args)*) (COMMA (creating_with_assign))*)?
          CLOSE_PAR
          ;
    function_body:
-
        OPEN_BRACKET
-       sub_function_body (return_rule SCOL)?
-       //grnral_creating
+       (sub_function_body | instructions)* (return_rule SCOL)?
        CLOSE_BRACKET
-
    ;
 
-   sub_function_body
-    : (instructions*
-    |  (OPEN_BRACKET sub_function_body CLOSE_BRACKET))
+    sub_function_body:
+       OPEN_BRACKET (sub_function_body | instructions)* CLOSE_BRACKET
 
-   ;
+      ;
+
    instructions // todo switch in instraction
      :(functional_instruction | nonfunctional_instruction )
 
    ;
    functional_instruction
        : (do_while| if_else_rule | switch_rule | ( while_rule  | foreach  |for_loop_rule)
-       ( (exiting_loops)?SCOL | OPEN_BRACKET instructions* (exiting_loops SCOL)? CLOSE_BRACKET | instructions))
+       ( (exiting_loops)?SCOL | OPEN_BRACKET (exiting_loops SCOL)? instructions*  CLOSE_BRACKET | instructions))
    ;
    nonfunctional_instruction
       :( call_function
        | print_statment
-       | arithmetic_infunction_statment
+       | shortcut_statments
        | grnral_creating
-       | genral_assign
-       | one_line_if_instruction ) SCOL
+       | genral_assign ) SCOL
    ;
 
    call_function : // if we put first expr no error but when we put prameters it gives us error
@@ -921,7 +920,7 @@ any_name
      | varible_from_object
      | array_base_form_with_index
      | genral_assign
-     | arithmetic_expr //todo arthmatic
+     | expression //todo arthmatic
       ;
 
       return_rule:
@@ -936,14 +935,11 @@ any_name
        ONE_CHAR_LETTER
         |IDENTIFIER
         |call_function
-        |arithmetic_infunction_statment
         |K_TRUE
         |K_FALSE
         |K_NULL
-        |one_line_if_statment_rule
         |varible_name// for calling array
-        |boolean_infunction_statment // changing inside it to take arithmatic expression
-        |arithmetic_expr
+        |expression // changing inside it to take arithmatic expression
         | array_base_form_with_index
         | varible_from_object
         | assign_varible
@@ -957,7 +953,6 @@ any_name
      indisde_the_print:
       ( IDENTIFIER |use_random_name | call_function |varible_from_object| array_base_form_with_index )
      ;
-
    /* indisde_the_print_part1:
         ((use_random_name|call_function|varible_from_object| array_base_form_with_index) PLUS)
     ;
@@ -976,16 +971,22 @@ any_name
     // | K_IF '('boolean_infunction_statment')''{'(sub_function_body)'}' K_ELSE K_IF'('boolean_infunction_statment ')''{'(sub_function_body)'}'
      ;
      if_rule
-     : K_IF OPEN_PAR boolean_infunction_statment CLOSE_PAR (OPEN_BRACKET instructions* (return_rule SCOL) ?  CLOSE_BRACKET ) | (SCOL |((return_rule)? SCOL) )
+     :   K_IF OPEN_PAR ( expression  | genral_assign ) CLOSE_PAR
+       ( OPEN_BRACKET instructions* (return_rule SCOL) ?  CLOSE_BRACKET
+       | (return_rule | instructions)? SCOL)
      ;
      else_if_rule:
-     K_ELSE_IF OPEN_PAR boolean_infunction_statment CLOSE_PAR (OPEN_BRACKET instructions* (return_rule SCOL)?CLOSE_BRACKET) | ( SCOL | (return_rule?  SCOL))
+     K_ELSE_IF OPEN_PAR ( expression  | genral_assign ) CLOSE_PAR
+     ( OPEN_BRACKET instructions* (return_rule SCOL) ?  CLOSE_BRACKET
+            | (return_rule | instructions)? SCOL)
      ;
      else_rulse:
-     (K_ELSE) (OPEN_BRACKET  instructions* (return_rule SCOL)?CLOSE_BRACKET) |(   return_rule? SCOL )
+         K_ELSE
+      ( OPEN_BRACKET instructions* (return_rule SCOL) ?  CLOSE_BRACKET
+             | (return_rule | instructions)? SCOL)
      ;
      while_rule:
-        (K_WHILE OPEN_PAR boolean_infunction_statment CLOSE_PAR )
+        K_WHILE OPEN_PAR ( expression  | genral_assign )  CLOSE_PAR
      ;
      do_while:
          K_DO
@@ -1003,7 +1004,7 @@ any_name
     for_loop_rule:
     K_FOR
      OPEN_PAR ( (create_varible_with_assign|create_varible_without_assign| inside_for_loop)   /*arithmetic_infunction_statment*/ )?
-       SCOL( boolean_infunction_statment )?
+       SCOL( expression )?
        SCOL ( inside_for_loop)? CLOSE_PAR
     ;
     inside_for_loop:
@@ -1015,26 +1016,9 @@ any_name
     K_VAR use_random_name '[]'* ':'use_random_name'[]'*
     CLOSE_PAR
     ;
-    one_line_if_instruction :
-    creating_with_assign one_line_if_statment_rule
-
-
-    ;
-    one_line_if_statment_rule:  // baracket working with t
-         (
-         ((OPEN_PAR)* boolean_infunction_statment (CLOSE_BRACKET)*
-         ('?'OPEN_PAR* (inside_one_line_function )  CLOSE_PAR*) )* (':'(OPEN_PAR* (inside_one_line_function)(CLOSE_PAR)* (CLOSE_BRACKET)*)))*
-        ;
-
-        inside_one_line_function :
-        | genral_assign
-        | boolean_infunction_statment
-       // | (OPEN_PAR full_arthmatic_statmint CLOSE_PAR)
-
-        ;
 
    switch_rule:
-       K_SWITCH OPEN_PAR (use_random_name| ONE_CHAR_LETTER|NUMERIC_LITERAL|arithmetic_infunction_statment|arithmetic_expr|call_function|varible_from_object) CLOSE_PAR
+       K_SWITCH OPEN_PAR (use_random_name| ONE_CHAR_LETTER|NUMERIC_LITERAL|genral_assign|call_function|varible_from_object | expression) CLOSE_PAR
        OPEN_BRACKET
        (case_rule*
        defult?)?
@@ -1046,7 +1030,7 @@ any_name
         ((K_BREAK | return_rule) SCOL)?
        ;
        case_rule:
-       K_CASE (any_name|ONE_CHAR_LETTER|NUMERIC_LITERAL|varible_from_object)':'
+       K_CASE (any_name|ONE_CHAR_LETTER|NUMERIC_LITERAL|varible_from_object | expression)':'
        (instructions)*
        ((K_BREAK
        | return_rule)
@@ -1058,21 +1042,23 @@ any_name
     //|create_array_form//with and without assign
     //|create_json_form//with and without assign
    // ;
+    grnral_creating:
+         creat_without_assign
+       | creating_with_assign
+       ;
+
    creating_with_assign:
        create_varible_with_assign
       |create_json_with_assign
       |create_Array_with_assign
    ;
-    grnral_creating:
-         creat_without_assign
-       | creating_with_assign
-       ;
 
      creat_without_assign:
      create_varible_without_assign
      | create_Array_without_assign
     | create_json_object_without_assign
      ;
+
     genral_assign
     : assign_varible // like: a=5
     | assign_array //like: a[2]=3
@@ -1087,20 +1073,13 @@ any_name
     assign_varible:
      (( use_random_name ) (any_arithmetic_oprator)? ASSIGN )+
       (
-             arithmetic_expr
-           | boolean_infunction_statment
+             expression
            | factored_select_stmt
            | select_stmt
            | K_NULL
-           //| arithmetic_infunction_statment // todo here merge with infunction
-
+           //| arithmetic_infunction_statment
       )
     ;
-    create_varible_form:
-
-    create_varible_without_assign | create_varible_with_assign
-    ;
-
     create_varible_without_assign
     :  K_VAR varible_name
     ;
@@ -1116,8 +1095,7 @@ any_name
      assign_array:
       (array_base_form_with_index (any_arithmetic_oprator)? ASSIGN)+
        (
-                    arithmetic_expr
-                  | boolean_infunction_statment
+                    expression
                   | factored_select_stmt
                   | select_stmt
 
@@ -1127,7 +1105,7 @@ any_name
      ;
 
       create_array_form:
-       create_Array_without_assign|create_Array_with_assign
+       create_Array_without_assign | create_Array_with_assign
       ;
 
         create_Array_without_assign:
@@ -1135,7 +1113,7 @@ any_name
         ;
 
         create_Array_with_assign:
-        K_VAR array_base_form_without_index (ASSIGN left_side_array)
+        K_VAR array_base_form_without_index (ASSIGN left_side_array )
         ;
 
 //        array_base_form:
@@ -1146,8 +1124,8 @@ any_name
          array_name ('[]')+
          ;
 
-         array_base_form_with_index:
-        array_name (OPEN_SQER_BAR (NUMERIC_LITERAL| varible_name|arithmetic_infunction_statment|arithmetic_expr )CLOSE_SQER_PAR)+
+        array_base_form_with_index:
+        array_name (OPEN_SQER_BAR ( NUMERIC_LITERAL | varible_name|expression )CLOSE_SQER_PAR)+
 
          ;
         array_identifier_form:
@@ -1155,11 +1133,11 @@ any_name
         ;
 
         array_boolean_form:
-         boolean_expr (COMMA boolean_expr)
+         expression (COMMA expression)
         ;
 
         array_integer_form:
-             (arithmetic_expr|arithmetic_infunction_statment) (COMMA (arithmetic_expr|arithmetic_infunction_statment))*
+             (expression) (COMMA (expression))*
         ;
 
         array_charecter_form:
@@ -1222,6 +1200,7 @@ any_name
           CLOSE_BRACKET)
            | factored_select_stmt
            | select_stmt
+           | array_name
 
          ;
 
@@ -1229,6 +1208,7 @@ any_name
   json_name:
     use_random_name
     ;
+
 
     assign_json:
     json_name ASSIGN (json_name|json_statment)
@@ -1254,29 +1234,29 @@ any_name
      ;
 
     value_json_statmnet:
-     IDENTIFIER
-     |NUMERIC_LITERAL
+       IDENTIFIER
+     | NUMERIC_LITERAL
      | K_NULL
-     |varible_name
+     | varible_name
      | ONE_CHAR_LETTER
      | json_statment
-     |varible_from_object
-     |call_function
+     | varible_from_object
+     | call_function
      | array_base_form_with_index //(ASSIGN left_side_array)?
      | array_objects_form2
      | OPEN_SQER_BAR value_left_side CLOSE_SQER_PAR
-     |arithmetic_expr
-     |full_arthmatic_statmint
-     |boolean_expr
+     | expression
+     //|expression //
+     //|expression //
 
     ;
 
     varible_from_object:
-    json_name (DOT varible_name)* // todo AST change (DOT varible_name)*
+    json_name (DOT varible_name)+ // todo AST change (DOT varible_name)*
     ;
 
  arithmetic_infunction_statment
-     : full_arthmatic_statmint
+     : arithmetic_expr
      | shortcut_statments
   ;
  full_arthmatic_statmint
@@ -1294,15 +1274,20 @@ any_name
     | arithmetic_expr MOD arithmetic_expr
     | arithmetic_expr ( PLUS | MINUS) arithmetic_expr
     | use_random_name (MINUS_MINUS | PLUS_PLUS)
+    | one_line_if_arthmatic_rule
     | (IDENTIFIER
     | ONE_CHAR_LETTER
     | call_function
     | varible_name
     | varible_from_object
     | array_base_form_with_index
-    | NUMERIC_LITERAL)
+    | NUMERIC_LITERAL
+    )
  ;
+  one_line_if_arthmatic_rule:  // baracket working with t
 
+             expression QUESTION_MARK arithmetic_expr COLON arithmetic_expr
+         ;
   any_arithmetic_oprator
      : STAR
      | DIV
@@ -1324,14 +1309,12 @@ any_name
      |( K_TRUE
      | K_FALSE
      | NUMERIC_LITERAL
-     | varible_from_object
-     | array_base_form_with_index
      | use_random_name
      | IDENTIFIER
      | ONE_CHAR_LETTER
+     | varible_from_object
+     | array_base_form_with_index
      | call_function) //todo call function
-     | arithmetic_expr
-
   ;
  shortcut_statments
       : MINUS_MINUS use_random_name
@@ -1339,6 +1322,41 @@ any_name
       | use_random_name MINUS_MINUS
       | use_random_name PLUS_PLUS
  ;
+
+ expression
+    : intral_expression_value
+    | (OPEN_PAR)+ (expression | genral_assign ) (CLOSE_PAR)+
+    | expression PLUS_PLUS
+    | expression MINUS_MINUS
+    | PLUS_PLUS expression
+    | MINUS_MINUS expression
+    | unary_operator expression
+    | expression (DIV | MOD |STAR ) expression
+    | expression (PLUS | MINUS) expression
+    | expression (LT2 | GT2 | GT3) expression
+    | expression (LT | GT | GT_EQ | LT_EQ ) expression
+    | expression (EQ | NOT_EQ1) expression
+    | expression AMP expression
+    | expression PIPE expression
+    | expression AMP2 expression
+    | expression PIPE2 expression
+    | expression QUESTION_MARK expression COLON expression
+
+
+ ;
+ intral_expression_value
+    : K_TRUE
+    | K_FALSE
+    | NUMERIC_LITERAL
+    | varible_name
+    | IDENTIFIER
+    | ONE_CHAR_LETTER
+    | varible_from_object
+    | array_base_form_with_index
+    | call_function
+    ;
+
+
      //statmint end section----------------------------------------------------------------------
     use_random_name
     : RANDOM_NAME
@@ -1354,6 +1372,7 @@ CLOSE_SQER_PAR: ']';
 OPEN_BRACKET : '{';
 CLOSE_BRACKET : '}';
 COMMA : ',';
+COLON : ':';
 ASSIGN : '=';
 STAR : '*';
 POWER :'^';
@@ -1365,6 +1384,7 @@ DIV : '/';
 MOD : '%';
 LT2 : '<<';
 GT2 : '>>';
+GT3 : '>>>';
 AMP : '&';
 AMP2 : '&&';
 PIPE : '|';
@@ -1377,6 +1397,9 @@ NOT_EQ1 : '!=';
 NOT_EQ2 : '<>';
 PLUS_PLUS: '++' ;
 MINUS_MINUS:'--' ;
+QUESTION_MARK : '?';
+XOR:'^';
+
 
 // http://www.sqlite.org/lang_keywords.html
 K_ABORT : A B O R T;

@@ -5,7 +5,7 @@ import Java.AST.instruction.non_functional_instructions;
 public class gneralcreating extends non_functional_instructions {
     createwihtoutassign wihtoutassig  ;
     create_with_assign withassign ;
-    String name ;
+    String name ;//todo remove replace with create with assign
 
     public void setName(String name) {
         this.name = name;

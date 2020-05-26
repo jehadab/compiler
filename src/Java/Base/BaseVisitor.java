@@ -55,8 +55,10 @@ import Java.AST.tokens.*;
 import org.antlr.v4.runtime.*;
 import Java.AST.assignmnet.*;
 import Java.AST.instruction.Returning.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 
+import javax.lang.model.type.NullType;
 import java.util.*;
 
 public class BaseVisitor extends SQLBaseVisitor {
@@ -1107,6 +1109,74 @@ public class BaseVisitor extends SQLBaseVisitor {
 
         return header;
     }
+    @Override
+    public String  visitUse_random_name(SQLParser.Use_random_nameContext ctx) {
+        System.out.println("visitUse_random_name");
+        String name ="";
+        if(ctx.RANDOM_NAME()!= null)
+        {
+            name = ctx.RANDOM_NAME().getSymbol().getText();
+
+        }
+
+        System.out.println(name );
+        return name ;
+    }
+
+    @Override
+    public function_body visitFunction_body(SQLParser.Function_bodyContext ctx) {
+        System.out.println("visit function body");
+        function_body function_body = new function_body();
+        instructions ins ;
+        for(int i =0 ; i<ctx.sub_function_body().instructions().size() ; i++)
+        {
+            function_body.addInstraction(visitInstructions(ctx.sub_function_body().instructions(i)));
+        }
+        for(int i =0 ; i<ctx.sub_function_body().instructions().size() ; i++)
+        {
+            // System.out.println("------------------"+function_body.getInstructions().get(i).getInstrucation_name());
+         /* System.out.println(((While_Rule)function_body.getInstructions().get(2)).getBoolean_infunction_statment()
+                  .getBoolean_exprs().get(0).getBoolean_exprs_list().get(0).getTermenal_node());
+            System.out.println("return rule test :"+((if_else)function_body.getInstructions().get(0)).getLoop());*/
+        }
+        return function_body;
+    }
+
+    @Override
+    public instructions visitFunctional_instruction(SQLParser.Functional_instructionContext ctx) {
+        functional_instuctions instructions = new functional_instuctions();
+
+        if(ctx.while_rule() != null)
+        {
+            instructions =  visitWhile_rule(ctx.while_rule());
+            for (int i = 0; i <ctx.instructions().size() ; i++) {
+                instructions.getInstructions().add(visitInstructions(ctx.instructions(i)));
+            }
+        }
+        else if(ctx.foreach() != null) {
+            instructions = visitForeach(ctx.foreach());
+            for (int i = 0; i < ctx.instructions().size(); i++) {
+                instructions.getInstructions().add(visitInstructions(ctx.instructions(i)));
+            }
+        } else if(ctx.for_loop_rule() != null) {
+            instructions = visitFor_loop_rule(ctx.for_loop_rule());
+            for (int i = 0; i < ctx.instructions().size(); i++) {
+                instructions.getInstructions().add(visitInstructions(ctx.instructions(i)));
+            }
+        }
+        return instructions;
+    }
+    /*  @Override
+      public instructions visitNonfunctional_instruction(SQLParser.Nonfunctional_instructionContext ctx) {
+          System.out.println("visit nonfunctional instruction");
+          non_functional_instructions instruction = new non_functional_instructions();
+
+          if(ctx.use_random_name() != null)
+          {
+              instruction = visitOne_line_if_statment_rule(ctx.one_line_if_statment_rule());
+          }
+          return instruction;
+      }*/
     @Override public args visitArgs(SQLParser.ArgsContext ctx) {
         //List<args> arg = new ArrayList<args>();
         args temp = new  args ();
@@ -1114,10 +1184,10 @@ public class BaseVisitor extends SQLBaseVisitor {
         // arg.add(visitGrnral_creating(ctx.grnral_creating(0)));
 
         /// arg.add(visitGrnral_creating(ctx.grnral_creating()));
-        if(ctx.creat_without_assign()!=null)
-        { temp.setCreating(visitGrnral_creating(ctx.grnral_creating()));
+        /*if(ctx.creat_without_assign()!=null)
+        { temp.setCreating(visitGrnral_creating(ctx.grnral_creating()));  //todo general_creating error
 
-        }
+        }*/
 
 
         // return arg;
@@ -1145,7 +1215,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         return general;
     }
     @Override public create_with_assign visitCreating_with_assign(SQLParser.Creating_with_assignContext ctx) {
-        System.out.println("visite create wiht assign ");
+        System.out.println("visit create with assign ");
         create_with_assign with  = new create_with_assign();
 
         if(ctx.create_json_with_assign()!=null)
@@ -1154,11 +1224,15 @@ public class BaseVisitor extends SQLBaseVisitor {
             with.setJson_wiht_assign(visitCreate_json_with_assign(ctx.create_json_with_assign()));
 
         }
-        if(ctx.create_Array_with_assign()!=null)
+       else if(ctx.create_Array_with_assign()!=null)
         {
 
             visitCreate_Array_with_assign(ctx.create_Array_with_assign());
 
+        }
+       else if(ctx.create_varible_with_assign() != null)
+        {
+            visitAssign_varible(ctx.create_varible_with_assign().assign_varible());
         }
         return with;
     }
@@ -1337,24 +1411,24 @@ public class BaseVisitor extends SQLBaseVisitor {
         System.out.println("visit return type ");
         return_type t = new return_type();
         if (ctx.IDENTIFIER() != null) {
-            System.out.println(" visite identifier " + ctx.IDENTIFIER().getSymbol().getText());
+            System.out.println(" visit identifier " + ctx.IDENTIFIER().getSymbol().getText());
             t.setTt(ctx.IDENTIFIER().getSymbol());
         }
         if (ctx.K_FALSE() != null) {
-            System.out.println(" visitefalse  " + ctx.K_FALSE().getSymbol().getText());
+            System.out.println(" visit false  " + ctx.K_FALSE().getSymbol().getText());
             t.setTt(ctx.K_FALSE().getSymbol());
         }
         if (ctx.K_TRUE() != null) {
             t.setTt(ctx.K_TRUE().getSymbol());
-            System.out.println(" visite true " + ctx.K_TRUE().getSymbol().getText());
+            System.out.println(" visit true " + ctx.K_TRUE().getSymbol().getText());
         }
         if (ctx.K_NULL() != null) {
 
             t.setTt(ctx.K_NULL().getSymbol());
-            System.out.println(" viste null " + ctx.K_NULL().getSymbol().getText());
+            System.out.println(" visit null " + ctx.K_NULL().getSymbol().getText());
         }
         if (ctx.arithmetic_expr() != null) {
-            System.out.println(" visit arithmatic  ");
+            System.out.println(" visit arthmatic  ");
             t.setArithmatic(visitArithmetic_expr(ctx.arithmetic_expr()));
 
         }
@@ -1363,7 +1437,7 @@ public class BaseVisitor extends SQLBaseVisitor {
             t.setArithmatic(visitArithmetic_expr(ctx.arithmetic_expr()));
         }
         if (ctx.array_base_form_with_index() != null) {
-            System.out.println(" vivst srrsy base form ");
+            System.out.println(" visit array base form ");
             t.setWihindex(visitArray_base_form_with_index(ctx.array_base_form_with_index()));
 
         }
@@ -1377,7 +1451,7 @@ public class BaseVisitor extends SQLBaseVisitor {
             t.setA(visitAssign_array(ctx.assign_array()));
         }
         if(ctx.assign_json()!=null){
-            System.out.println(" visit assig json ");
+            System.out.println(" visit assign json ");
             t.setAssign(visitAssign_json(ctx.assign_json()));
         }
         if(ctx.assign_varible()!=null)
@@ -1387,8 +1461,12 @@ public class BaseVisitor extends SQLBaseVisitor {
         }
         if(ctx.boolean_infunction_statment()!=null)
         {
-            System.out.println("visit boolena ");
+            System.out.println("visit boolean ");
             t.setBooleanes(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
+        }
+        if(ctx.varible_name() != null){
+            System.out.println("visit variable name in return type");
+            t.setName(visitUse_random_name(ctx.varible_name().use_random_name()));
         }
 
 
@@ -1397,6 +1475,7 @@ public class BaseVisitor extends SQLBaseVisitor {
     }
     @Override public returnes_rule visitReturn_rule(SQLParser.Return_ruleContext ctx) {
         returnes_rule rule = new returnes_rule();
+        System.out.println("visit return rule");
         rule.setT(visitReturn_type(ctx.return_type()));
         return rule;
 
@@ -1447,7 +1526,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         if(ctx.json_name()!=null && ctx.varible_name()!=null) {
 
             objectes.setForm(visitJson_name(ctx.json_name()));
-            objectes.setName(visitUse_random_name(ctx.varible_name().use_random_name()));
+            //objectes.setName(visitUse_random_name(ctx.varible_name().use_random_name()));
             System.out.println("json name "+ctx.json_name());
             System.out.println("object name "+ctx.varible_name());
             //visitUse_random_name(ctx.varible_name().use_random_name()) ;
@@ -1473,7 +1552,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         json_without_assign.setForm(visitJson_name(ctx.json_name()));
         return json_without_assign;
     }
-    @Override public jsonform visitJson_name(SQLParser.Json_nameContext ctx) {
+    @Override public jsonform   visitJson_name(SQLParser.Json_nameContext ctx) {
         System.out.println("json name ");
         jsonform form = new jsonform();
         //visitUse_random_name(ctx.use_random_name());
@@ -1508,71 +1587,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         return  creatvaribelwihtout;
 
     }
-    @Override
-    public String  visitUse_random_name(SQLParser.Use_random_nameContext ctx) {
-        System.out.println("visitUse_random_name");
-        String name ="";
-        if(ctx.RANDOM_NAME()!= null)
-        {
-            name = ctx.RANDOM_NAME().getSymbol().getText();
 
-        }
-
-        System.out.println(name );
-        return name ;
-    }
-
-    @Override
-    public function_body visitFunction_body(SQLParser.Function_bodyContext ctx) {
-        System.out.println("visit function body");
-        function_body function_body = new function_body();
-        instructions ins ;
-        for(int i =0 ; i<ctx.sub_function_body().instructions().size() ; i++)
-        {
-           function_body.addInstraction(visitInstructions(ctx.sub_function_body().instructions(i)));
-        }
-        for(int i =0 ; i<ctx.sub_function_body().instructions().size() ; i++)
-        {
-          System.out.println(function_body.getInstructions().get(i).getInstrucation_name());
-        }
-        return function_body;
-    }
-
-    @Override
-    public instructions visitFunctional_instruction(SQLParser.Functional_instructionContext ctx) {
-        functional_instuctions instructions = new functional_instuctions();
-
-        if(ctx.while_rule() != null)
-        {
-            instructions =  visitWhile_rule(ctx.while_rule());
-            for (int i = 0; i <ctx.instructions().size() ; i++) {
-                instructions.getInstructions().add(visitInstructions(ctx.instructions(i)));
-            }
-        }
-        else if(ctx.foreach() != null) {
-            instructions = visitForeach(ctx.foreach());
-            for (int i = 0; i < ctx.instructions().size(); i++) {
-                instructions.getInstructions().add(visitInstructions(ctx.instructions(i)));
-            }
-        } else if(ctx.for_loop_rule() != null) {
-            instructions = visitFor_loop_rule(ctx.for_loop_rule());
-            for (int i = 0; i < ctx.instructions().size(); i++) {
-                instructions.getInstructions().add(visitInstructions(ctx.instructions(i)));
-            }
-        }
-        return instructions;
-    }
-  /*  @Override
-    public instructions visitNonfunctional_instruction(SQLParser.Nonfunctional_instructionContext ctx) {
-        System.out.println("visit nonfunctional instruction");
-        non_functional_instructions instruction = new non_functional_instructions();
-
-        if(ctx.use_random_name() != null)
-        {
-            instruction = visitOne_line_if_statment_rule(ctx.one_line_if_statment_rule());
-        }
-        return instruction;
-    }*/
   @Override public exting_oop visitExiting_loops(SQLParser.Exiting_loopsContext ctx) {
       exting_oop c = new exting_oop ();
       c.setR(visitReturn_rule(ctx.return_rule()));
@@ -1657,11 +1672,20 @@ public class BaseVisitor extends SQLBaseVisitor {
             System.out.println();
         }
 
+
+
         if(ctx.if_rule() != null){
             for(int i =0 ; i<ctx.if_rule().instructions().size() ; i++) {
                 ins.addinstruction(visitInstructions(ctx.if_rule().instructions(i)));
-
                 }
+            if(ctx.if_rule().return_rule()!=null) {
+                returnes_rule r ;
+                r = visitReturn_rule( ctx.if_rule().return_rule());
+                exting_oop e =  new exting_oop();
+                e.setR(r);
+                ins.setLoop(e);
+                System.out.println("****************the id for object exiting loop "+ins.getLoop());
+            }
         if(ctx.else_if_rule() != null){
             for(int i =0 ; i<ctx.else_if_rule().size() ; i++) {
                 //System.out.println("hiiiiiii" + ctx.else_if_rule().size() );
@@ -1912,16 +1936,16 @@ public class BaseVisitor extends SQLBaseVisitor {
         {
             var.setArithmatic_expr(visitArithmetic_expr(ctx.arithmetic_expr()));
         }
-        else if (ctx.boolean_infunction_statment() != null)
+         if (ctx.boolean_infunction_statment() != null)
         {
             var.setBoolean_infunction_statment(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
         }
-        else if (ctx.use_random_name() != null)
+         if (ctx.use_random_name() != null)
         {
             for (int i = 0; i <ctx.use_random_name().size() ; i++) {
                 Variable_with_opretor variable_with_opretor = new Variable_with_opretor();
                 variable_with_opretor.setVariable_name(visitUse_random_name(ctx.use_random_name().get(i)));
-                if(ctx.any_arithmetic_oprator()!= null)
+                if(ctx.any_arithmetic_oprator()!= null && ctx.any_arithmetic_oprator().size() != 0)
                 {
                     variable_with_opretor.setOperator(ctx.any_arithmetic_oprator().get(i).getText());
                 }
@@ -2000,14 +2024,19 @@ public class BaseVisitor extends SQLBaseVisitor {
         return array_base_with_index;
     }
 
-    Stack<SQLParser.Arithmetic_exprContext> arithmetic_expr_tree = new Stack<>();
+    ArrayList<SQLParser.Arithmetic_exprContext> arithmetic_expr_tree = new ArrayList<>();
+    ArrayList<SQLParser.Arithmetic_exprContext> arithmetic_expr_tree_op = new ArrayList<>();
     Stack<SQLParser.Boolean_exprContext> boolean_expr_tree = new Stack<>();
     @Override
-    public Arithmatic_expr visitArithmetic_expr(SQLParser.Arithmetic_exprContext ctx) {
+    public Arithmatic_expr  visitArithmetic_expr(SQLParser.Arithmetic_exprContext ctx) {
         System.out.println("visit artmatic EXPR");
         Arithmatic_expr arithmatic_expr = new Arithmatic_expr();
+
+
         DFS_arthmatic_expr(ctx);
         arithmatic_expr =  Arithmatics( arithmatic_expr );
+
+        expression_algorthim(ctx);
 
         /*for (int i = 0; i < arithmatic_expr.getArithmatic_exprs_list().size(); i++) {
             if(arithmatic_expr.getArithmatic_exprs_list().get(i).getTermenal_node() != null)
@@ -2048,29 +2077,77 @@ public class BaseVisitor extends SQLBaseVisitor {
         if(ctx == null) {
             return false;
         }
-        if(level == 1)
+        if(level == 1 )
         {
-            arithmetic_expr_tree.add(ctx);
-            return true;
-        }
+            System.out.println(level+"------------- :" + ctx.getText());
 
-        boolean left = fill_arth_expr(ctx.arithmetic_expr(0), level - 1 ,visited);
-        boolean right = fill_arth_expr(ctx.arithmetic_expr(1), level - 1 , visited);
+
+
+
+            arithmetic_expr_tree.add(ctx);
+
+                return true;
+
+        }
+        //if(ctx.children.get(0).getClass().getName() != "SQLParser.Arithmetic_exprContext")return false;
+
+        boolean left = fill_arth_expr(ctx.arithmetic_expr(1), level - 1 ,visited);
+        boolean right = fill_arth_expr(ctx.arithmetic_expr(0), level - 1 , visited);
         return left || right;
     }
     public void DFS_arthmatic_expr (SQLParser.Arithmetic_exprContext ctx  )
     {
         int level = 1 ;
+
+        System.out.println("niggars :"+ctx.getChildCount());
+        System.out.println("niggarsD :"+ctx.depth());
+        System.out.println("niggarsc :" + ctx.children);
+        System.out.println("niggars0 :" + ctx.arithmetic_expr(0).getText());
+        System.out.println("niggars1 :" + ctx.arithmetic_expr(1).getText());
+        String x = ((SQLParser.Arithmetic_exprContext)ctx.children.toArray()[0]).getText();
+
+
         HashSet<SQLParser.Arithmetic_exprContext> visited = new HashSet<SQLParser.Arithmetic_exprContext>();
         while(fill_arth_expr(ctx , level , visited)){
             //System.out.println("enter t");
             level++;
         }
     }
+    public void expression_algorthim(SQLParser.Arithmetic_exprContext ctx  ){
+        Expression_List expression_list = new Expression_List();
+        if(ctx.arithmetic_expr() != null) {
+            for (int i = 0; i < ctx.arithmetic_expr().size(); i++) {
+
+                Expression_List left_expr = new Expression_List();
+                Expression_List right_expr = new Expression_List();
+
+                if(i ==  0 ){
+                    expression_list.setLeft_expr(left_expr);
+
+                }
+                if(i == 1){
+
+                    expression_list.setRight_expr(right_expr);
+                }
+            }
+        }
+    }
+    public void setOprator(SQLParser.Arithmetic_exprContext ctx  , Expression_List expression_list){
+        if(ctx.PLUS() != null){
+            expression_list.setOp(ctx.PLUS().toString());
+        }
+        else if(ctx.STAR() != null){
+            expression_list.setOp(ctx.STAR().toString());
+        }
+    }
+
     private Arithmatic_expr Arithmatics( Arithmatic_expr arithmatic_expr){
-       while (!arithmetic_expr_tree.isEmpty())
-       {
-           SQLParser.Arithmetic_exprContext arithmetic_exprContext = arithmetic_expr_tree.pop();
+        for (int i = 0; i <arithmetic_expr_tree.size(); i++) {
+
+
+           SQLParser.Arithmetic_exprContext arithmetic_exprContext = arithmetic_expr_tree.get(i);
+           arithmetic_expr_tree.remove(i);
+
             Arithmatic_expr termenal_expr = new Arithmatic_expr();
                 if(arithmetic_exprContext.NUMERIC_LITERAL() != null){
                     termenal_expr.setTermenal_node(arithmetic_exprContext.NUMERIC_LITERAL().toString());

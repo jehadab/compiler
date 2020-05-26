@@ -12,7 +12,7 @@ import Java.AST.instruction.arithmetic_infunction_statment;
 import org.antlr.v4.runtime.Token;
 
 public class return_type  {
-Token tt ;
+    Token tt ;
     variablefromobject from ;
     String name;
     assign_variable v ;
