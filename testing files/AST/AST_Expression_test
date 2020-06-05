@@ -1,0 +1,8 @@
+func() {
+q = true >= r ;
+i = 'c' > true ;
+z = - r - --r;
+i =(x > 2 ? y : z) + (x++);
+z = u+ ( p = y + 2);
+
+}

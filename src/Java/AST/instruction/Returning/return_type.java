@@ -7,6 +7,7 @@ import Java.AST.creating.assign_variable;
 import Java.AST.creating.jsonassign;
 import Java.AST.expr.Arithmatic_expr;
 import Java.AST.expr.Boolean_Infunction_Statment;
+import Java.AST.expr.Expression;
 import Java.AST.instruction.CallFunction;
 import Java.AST.instruction.arithmetic_infunction_statment;
 import org.antlr.v4.runtime.Token;
@@ -19,9 +20,16 @@ public class return_type  {
     assign_Array a ;
     jsonassign assign ;
     CallFunction call ;
-    Boolean_Infunction_Statment booleanes ;
-    Arithmatic_expr arithmatic ;
-    arithmetic_infunction_statment infunction;
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(Expression expression) {
+        this.expression = expression;
+    }
+
+    Expression expression;
     array_base_fom_with_index wihindex ;
 
     public void setTt(Token tt) {
@@ -87,30 +95,6 @@ public class return_type  {
     }
 
 
-    public void setBooleanes(Boolean_Infunction_Statment booleanes) {
-        this.booleanes = booleanes;
-    }
-
-    public Boolean_Infunction_Statment getBooleanes() {
-        return booleanes;
-    }
-
-
-    public void setArithmatic(Arithmatic_expr arithmatic) {
-        this.arithmatic = arithmatic;
-    }
-
-    public Arithmatic_expr getArithmatic() {
-        return arithmatic;
-    }
-
-    public void setInfunction(arithmetic_infunction_statment infunction) {
-        this.infunction = infunction;
-    }
-
-    public arithmetic_infunction_statment getInfunction() {
-        return infunction;
-    }
 
     public void setWihindex(array_base_fom_with_index wihindex) {
         this.wihindex = wihindex;

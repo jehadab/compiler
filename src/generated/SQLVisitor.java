@@ -677,24 +677,6 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitForeach(SQLParser.ForeachContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#one_line_if_instruction}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOne_line_if_instruction(SQLParser.One_line_if_instructionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#one_line_if_statment_rule}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOne_line_if_statment_rule(SQLParser.One_line_if_statment_ruleContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#inside_one_line_function}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInside_one_line_function(SQLParser.Inside_one_line_functionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SQLParser#switch_rule}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -713,17 +695,17 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCase_rule(SQLParser.Case_ruleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#creating_with_assign}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCreating_with_assign(SQLParser.Creating_with_assignContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SQLParser#grnral_creating}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitGrnral_creating(SQLParser.Grnral_creatingContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SQLParser#creating_with_assign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCreating_with_assign(SQLParser.Creating_with_assignContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SQLParser#creat_without_assign}.
 	 * @param ctx the parse tree
@@ -748,12 +730,6 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssign_varible(SQLParser.Assign_varibleContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#create_varible_form}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCreate_varible_form(SQLParser.Create_varible_formContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SQLParser#create_varible_without_assign}.
 	 * @param ctx the parse tree
@@ -929,23 +905,11 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVarible_from_object(SQLParser.Varible_from_objectContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#arithmetic_infunction_statment}.
+	 * Visit a parse tree produced by {@link SQLParser#shortcut_statments}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArithmetic_infunction_statment(SQLParser.Arithmetic_infunction_statmentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#full_arthmatic_statmint}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFull_arthmatic_statmint(SQLParser.Full_arthmatic_statmintContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#arithmetic_expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArithmetic_expr(SQLParser.Arithmetic_exprContext ctx);
+	T visitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SQLParser#any_arithmetic_oprator}.
 	 * @param ctx the parse tree
@@ -953,23 +917,17 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAny_arithmetic_oprator(SQLParser.Any_arithmetic_opratorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#boolean_infunction_statment}.
+	 * Visit a parse tree produced by {@link SQLParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBoolean_infunction_statment(SQLParser.Boolean_infunction_statmentContext ctx);
+	T visitExpression(SQLParser.ExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#boolean_expr}.
+	 * Visit a parse tree produced by {@link SQLParser#intral_expression_value}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBoolean_expr(SQLParser.Boolean_exprContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#shortcut_statments}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx);
+	T visitIntral_expression_value(SQLParser.Intral_expression_valueContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SQLParser#use_random_name}.
 	 * @param ctx the parse tree

@@ -2,6 +2,7 @@ package Java.AST.arrayandjson;
 
 import Java.AST.Node;
 import Java.AST.expr.Arithmatic_expr;
+import Java.AST.expr.Expression;
 import Java.AST.instruction.arithmetic_infunction_statment;
 
 /**
@@ -18,22 +19,6 @@ public class Array_base_form_variables extends Node {
         this.variable_name = variable_name;
     }
 
-    public Arithmatic_expr getArithmatic_expr() {
-        return arithmatic_expr;
-    }
-
-    public void setArithmatic_expr(Arithmatic_expr arithmatic_expr) {
-        this.arithmatic_expr = arithmatic_expr;
-    }
-
-    public Java.AST.instruction.arithmetic_infunction_statment getArithmetic_infunction_statment() {
-        return arithmetic_infunction_statment;
-    }
-
-    public void setArithmetic_infunction_statment(Java.AST.instruction.arithmetic_infunction_statment arithmetic_infunction_statment) {
-        this.arithmetic_infunction_statment = arithmetic_infunction_statment;
-    }
-
     public String getNumber() {
         return Number;
     }
@@ -42,9 +27,19 @@ public class Array_base_form_variables extends Node {
         Number = number;
     }
 
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(Expression expression) {
+        this.expression = expression;
+    }
+
     String variable_name;
-    Arithmatic_expr arithmatic_expr;
-    arithmetic_infunction_statment arithmetic_infunction_statment;
+
+    Expression expression;
+
     String Number;
 
 }

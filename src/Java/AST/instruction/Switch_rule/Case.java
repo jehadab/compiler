@@ -1,5 +1,6 @@
 package Java.AST.instruction.Switch_rule;
 
+import Java.AST.expr.Expression;
 import Java.AST.instruction.functional_instuctions;
 
 /**
@@ -20,6 +21,16 @@ public class Case extends functional_instuctions {
 
     public void setTermenal_node(String termenal_node) {
         this.termenal_node = termenal_node;
+    }
+
+    Expression expression ;
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
     String variable_name ;

@@ -2,6 +2,7 @@ package Java.AST.instruction.loops;
 
 import Java.AST.expr.Arithmatic_expr;
 import Java.AST.expr.Boolean_Infunction_Statment;
+import Java.AST.expr.Expression;
 import Java.AST.instruction.functional_instuctions;
 
 import java.util.List;
@@ -11,14 +12,13 @@ import java.util.List;
  */
 public class do_while extends functional_instuctions {
 
-    public Boolean_Infunction_Statment getBoolean_infunction_statment() {
-        return boolean_infunction_statment;
+Expression expression ;
+
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setBoolean_infunction_statment(Boolean_Infunction_Statment boolean_infunction_statment) {
-        this.boolean_infunction_statment = boolean_infunction_statment;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
-
-    Boolean_Infunction_Statment boolean_infunction_statment;
-
 }

@@ -1118,36 +1118,6 @@ public interface SQLListener extends ParseTreeListener {
 	 */
 	void exitForeach(SQLParser.ForeachContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SQLParser#one_line_if_instruction}.
-	 * @param ctx the parse tree
-	 */
-	void enterOne_line_if_instruction(SQLParser.One_line_if_instructionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#one_line_if_instruction}.
-	 * @param ctx the parse tree
-	 */
-	void exitOne_line_if_instruction(SQLParser.One_line_if_instructionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#one_line_if_statment_rule}.
-	 * @param ctx the parse tree
-	 */
-	void enterOne_line_if_statment_rule(SQLParser.One_line_if_statment_ruleContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#one_line_if_statment_rule}.
-	 * @param ctx the parse tree
-	 */
-	void exitOne_line_if_statment_rule(SQLParser.One_line_if_statment_ruleContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#inside_one_line_function}.
-	 * @param ctx the parse tree
-	 */
-	void enterInside_one_line_function(SQLParser.Inside_one_line_functionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#inside_one_line_function}.
-	 * @param ctx the parse tree
-	 */
-	void exitInside_one_line_function(SQLParser.Inside_one_line_functionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SQLParser#switch_rule}.
 	 * @param ctx the parse tree
 	 */
@@ -1178,16 +1148,6 @@ public interface SQLListener extends ParseTreeListener {
 	 */
 	void exitCase_rule(SQLParser.Case_ruleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SQLParser#creating_with_assign}.
-	 * @param ctx the parse tree
-	 */
-	void enterCreating_with_assign(SQLParser.Creating_with_assignContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#creating_with_assign}.
-	 * @param ctx the parse tree
-	 */
-	void exitCreating_with_assign(SQLParser.Creating_with_assignContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SQLParser#grnral_creating}.
 	 * @param ctx the parse tree
 	 */
@@ -1197,6 +1157,16 @@ public interface SQLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitGrnral_creating(SQLParser.Grnral_creatingContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SQLParser#creating_with_assign}.
+	 * @param ctx the parse tree
+	 */
+	void enterCreating_with_assign(SQLParser.Creating_with_assignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SQLParser#creating_with_assign}.
+	 * @param ctx the parse tree
+	 */
+	void exitCreating_with_assign(SQLParser.Creating_with_assignContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SQLParser#creat_without_assign}.
 	 * @param ctx the parse tree
@@ -1237,16 +1207,6 @@ public interface SQLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssign_varible(SQLParser.Assign_varibleContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#create_varible_form}.
-	 * @param ctx the parse tree
-	 */
-	void enterCreate_varible_form(SQLParser.Create_varible_formContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#create_varible_form}.
-	 * @param ctx the parse tree
-	 */
-	void exitCreate_varible_form(SQLParser.Create_varible_formContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SQLParser#create_varible_without_assign}.
 	 * @param ctx the parse tree
@@ -1538,35 +1498,15 @@ public interface SQLListener extends ParseTreeListener {
 	 */
 	void exitVarible_from_object(SQLParser.Varible_from_objectContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SQLParser#arithmetic_infunction_statment}.
+	 * Enter a parse tree produced by {@link SQLParser#shortcut_statments}.
 	 * @param ctx the parse tree
 	 */
-	void enterArithmetic_infunction_statment(SQLParser.Arithmetic_infunction_statmentContext ctx);
+	void enterShortcut_statments(SQLParser.Shortcut_statmentsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SQLParser#arithmetic_infunction_statment}.
+	 * Exit a parse tree produced by {@link SQLParser#shortcut_statments}.
 	 * @param ctx the parse tree
 	 */
-	void exitArithmetic_infunction_statment(SQLParser.Arithmetic_infunction_statmentContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#full_arthmatic_statmint}.
-	 * @param ctx the parse tree
-	 */
-	void enterFull_arthmatic_statmint(SQLParser.Full_arthmatic_statmintContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#full_arthmatic_statmint}.
-	 * @param ctx the parse tree
-	 */
-	void exitFull_arthmatic_statmint(SQLParser.Full_arthmatic_statmintContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#arithmetic_expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterArithmetic_expr(SQLParser.Arithmetic_exprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#arithmetic_expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitArithmetic_expr(SQLParser.Arithmetic_exprContext ctx);
+	void exitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SQLParser#any_arithmetic_oprator}.
 	 * @param ctx the parse tree
@@ -1578,35 +1518,25 @@ public interface SQLListener extends ParseTreeListener {
 	 */
 	void exitAny_arithmetic_oprator(SQLParser.Any_arithmetic_opratorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SQLParser#boolean_infunction_statment}.
+	 * Enter a parse tree produced by {@link SQLParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterBoolean_infunction_statment(SQLParser.Boolean_infunction_statmentContext ctx);
+	void enterExpression(SQLParser.ExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SQLParser#boolean_infunction_statment}.
+	 * Exit a parse tree produced by {@link SQLParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitBoolean_infunction_statment(SQLParser.Boolean_infunction_statmentContext ctx);
+	void exitExpression(SQLParser.ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SQLParser#boolean_expr}.
+	 * Enter a parse tree produced by {@link SQLParser#intral_expression_value}.
 	 * @param ctx the parse tree
 	 */
-	void enterBoolean_expr(SQLParser.Boolean_exprContext ctx);
+	void enterIntral_expression_value(SQLParser.Intral_expression_valueContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SQLParser#boolean_expr}.
+	 * Exit a parse tree produced by {@link SQLParser#intral_expression_value}.
 	 * @param ctx the parse tree
 	 */
-	void exitBoolean_expr(SQLParser.Boolean_exprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#shortcut_statments}.
-	 * @param ctx the parse tree
-	 */
-	void enterShortcut_statments(SQLParser.Shortcut_statmentsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#shortcut_statments}.
-	 * @param ctx the parse tree
-	 */
-	void exitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx);
+	void exitIntral_expression_value(SQLParser.Intral_expression_valueContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SQLParser#use_random_name}.
 	 * @param ctx the parse tree

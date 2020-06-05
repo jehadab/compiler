@@ -1348,42 +1348,6 @@ public class SQLBaseListener implements SQLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOne_line_if_instruction(SQLParser.One_line_if_instructionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitOne_line_if_instruction(SQLParser.One_line_if_instructionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterOne_line_if_statment_rule(SQLParser.One_line_if_statment_ruleContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitOne_line_if_statment_rule(SQLParser.One_line_if_statment_ruleContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInside_one_line_function(SQLParser.Inside_one_line_functionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInside_one_line_function(SQLParser.Inside_one_line_functionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterSwitch_rule(SQLParser.Switch_ruleContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1420,18 +1384,6 @@ public class SQLBaseListener implements SQLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCreating_with_assign(SQLParser.Creating_with_assignContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCreating_with_assign(SQLParser.Creating_with_assignContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterGrnral_creating(SQLParser.Grnral_creatingContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1439,6 +1391,18 @@ public class SQLBaseListener implements SQLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitGrnral_creating(SQLParser.Grnral_creatingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCreating_with_assign(SQLParser.Creating_with_assignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCreating_with_assign(SQLParser.Creating_with_assignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1487,18 +1451,6 @@ public class SQLBaseListener implements SQLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAssign_varible(SQLParser.Assign_varibleContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCreate_varible_form(SQLParser.Create_varible_formContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCreate_varible_form(SQLParser.Create_varible_formContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1852,37 +1804,13 @@ public class SQLBaseListener implements SQLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArithmetic_infunction_statment(SQLParser.Arithmetic_infunction_statmentContext ctx) { }
+	@Override public void enterShortcut_statments(SQLParser.Shortcut_statmentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArithmetic_infunction_statment(SQLParser.Arithmetic_infunction_statmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFull_arthmatic_statmint(SQLParser.Full_arthmatic_statmintContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFull_arthmatic_statmint(SQLParser.Full_arthmatic_statmintContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArithmetic_expr(SQLParser.Arithmetic_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArithmetic_expr(SQLParser.Arithmetic_exprContext ctx) { }
+	@Override public void exitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1900,37 +1828,25 @@ public class SQLBaseListener implements SQLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBoolean_infunction_statment(SQLParser.Boolean_infunction_statmentContext ctx) { }
+	@Override public void enterExpression(SQLParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBoolean_infunction_statment(SQLParser.Boolean_infunction_statmentContext ctx) { }
+	@Override public void exitExpression(SQLParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBoolean_expr(SQLParser.Boolean_exprContext ctx) { }
+	@Override public void enterIntral_expression_value(SQLParser.Intral_expression_valueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBoolean_expr(SQLParser.Boolean_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterShortcut_statments(SQLParser.Shortcut_statmentsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx) { }
+	@Override public void exitIntral_expression_value(SQLParser.Intral_expression_valueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

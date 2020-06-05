@@ -1,5 +1,6 @@
 package Java.AST.instruction.loops;
 import Java.AST.expr.Boolean_Infunction_Statment;
+import Java.AST.expr.Expression;
 import Java.AST.instruction.functional_instuctions;
 import Java.AST.creating.createwihtoutassign;
 import Java.AST.creating.createvariablewithassign;
@@ -40,18 +41,18 @@ public class For_Loop_Rule extends functional_instuctions {
         this.var_without_asgn = var_without_asgn;
     }
 
-    public Boolean_Infunction_Statment getBoolean_infunction_statment() {
-        return boolean_infunction_statment;
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setBoolean_infunction_statment(Boolean_Infunction_Statment boolean_infunction_statment) {
-        this.boolean_infunction_statment = boolean_infunction_statment;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
     Inside_for_loop left_inside_for_loop ;
     Inside_for_loop right_inside_for_loop ;
     createvariablewithassign var_with_asgn;
     createwihtoutassign var_without_asgn;
-    Boolean_Infunction_Statment boolean_infunction_statment;
+    Expression expression ;
 
 }

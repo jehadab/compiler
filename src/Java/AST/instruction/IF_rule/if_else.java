@@ -2,6 +2,7 @@ package Java.AST.instruction.IF_rule;
 
 import Java.AST.expr.Boolean_Expr;
 import Java.AST.expr.Boolean_Infunction_Statment;
+import Java.AST.expr.Expression;
 import Java.AST.instruction.functional_instuctions;
 import Java.AST.instruction.instructions;
 
@@ -41,15 +42,15 @@ public class if_else extends functional_instuctions {
     }
 
 
-    public Boolean_Infunction_Statment getBoolean_Infunction_Statment() {
-        return boolean_Infunction_Statment;
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setBoolean_Infunction_Statment(Boolean_Infunction_Statment boolean_Infunction_Statment) {
-        this.boolean_Infunction_Statment = boolean_Infunction_Statment;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
-    Boolean_Infunction_Statment boolean_Infunction_Statment;
+    Expression expression ;
 
     private List<instructions> else_if ;
 

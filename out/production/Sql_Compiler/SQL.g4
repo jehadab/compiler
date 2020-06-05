@@ -912,7 +912,8 @@ any_name
       //| create_Array_without_assign
       //| create_json_object_without_assign)
      prameters
-     :NUMERIC_LITERAL
+     : expression
+     | NUMERIC_LITERAL
      | ONE_CHAR_LETTER
      | call_function
      | IDENTIFIER
@@ -920,7 +921,7 @@ any_name
      | varible_from_object
      | array_base_form_with_index
      | genral_assign
-     | expression //todo arthmatic
+
       ;
 
       return_rule:
@@ -932,14 +933,14 @@ any_name
       ;
 
     return_type: // todo narjes assight
-       ONE_CHAR_LETTER
+         expression
+        |ONE_CHAR_LETTER
         |IDENTIFIER
         |call_function
         |K_TRUE
         |K_FALSE
         |K_NULL
         |varible_name// for calling array
-        |expression // changing inside it to take arithmatic expression
         | array_base_form_with_index
         | varible_from_object
         | assign_varible
@@ -1018,7 +1019,7 @@ any_name
     ;
 
    switch_rule:
-       K_SWITCH OPEN_PAR (use_random_name| ONE_CHAR_LETTER|NUMERIC_LITERAL|genral_assign|call_function|varible_from_object | expression) CLOSE_PAR
+       K_SWITCH OPEN_PAR ( expression | use_random_name| ONE_CHAR_LETTER|NUMERIC_LITERAL|genral_assign|call_function|varible_from_object ) CLOSE_PAR
        OPEN_BRACKET
        (case_rule*
        defult?)?
@@ -1030,7 +1031,7 @@ any_name
         ((K_BREAK | return_rule) SCOL)?
        ;
        case_rule:
-       K_CASE (any_name|ONE_CHAR_LETTER|NUMERIC_LITERAL|varible_from_object | expression)':'
+       K_CASE ( expression|any_name|ONE_CHAR_LETTER|NUMERIC_LITERAL|varible_from_object )':'
        (instructions)*
        ((K_BREAK
        | return_rule)
@@ -1088,6 +1089,7 @@ any_name
      K_VAR assign_varible
     ;
 
+
      array_name:
      use_random_name
      ;
@@ -1125,7 +1127,7 @@ any_name
          ;
 
         array_base_form_with_index:
-        array_name (OPEN_SQER_BAR ( NUMERIC_LITERAL | varible_name|expression )CLOSE_SQER_PAR)+
+        array_name ( OPEN_SQER_BAR ( expression | NUMERIC_LITERAL | varible_name)CLOSE_SQER_PAR)+
 
          ;
         array_identifier_form:
@@ -1234,7 +1236,8 @@ any_name
      ;
 
     value_json_statmnet:
-       IDENTIFIER
+       expression
+     | IDENTIFIER
      | NUMERIC_LITERAL
      | K_NULL
      | varible_name
@@ -1245,7 +1248,6 @@ any_name
      | array_base_form_with_index //(ASSIGN left_side_array)?
      | array_objects_form2
      | OPEN_SQER_BAR value_left_side CLOSE_SQER_PAR
-     | expression
      //|expression //
      //|expression //
 
@@ -1254,7 +1256,7 @@ any_name
     varible_from_object:
     json_name (DOT varible_name)+ // todo AST change (DOT varible_name)*
     ;
-
+/*
  arithmetic_infunction_statment
      : arithmetic_expr
      | shortcut_statments
@@ -1288,14 +1290,7 @@ any_name
 
              expression QUESTION_MARK arithmetic_expr COLON arithmetic_expr
          ;
-  any_arithmetic_oprator
-     : STAR
-     | DIV
-     | POWER
-     | MOD
-     | PLUS
-     | MINUS
-   ;
+
 
   boolean_infunction_statment
      : boolean_expr
@@ -1315,13 +1310,22 @@ any_name
      | varible_from_object
      | array_base_form_with_index
      | call_function) //todo call function
-  ;
- shortcut_statments
+  ;*/
+   shortcut_statments
       : MINUS_MINUS use_random_name
       | PLUS_PLUS use_random_name
       | use_random_name MINUS_MINUS
       | use_random_name PLUS_PLUS
  ;
+
+ any_arithmetic_oprator
+     : STAR
+     | DIV
+     | POWER
+     | MOD
+     | PLUS
+     | MINUS
+   ;
 
  expression
     : intral_expression_value
@@ -1355,6 +1359,8 @@ any_name
     | array_base_form_with_index
     | call_function
     ;
+
+
 
 
      //statmint end section----------------------------------------------------------------------
@@ -1398,7 +1404,6 @@ NOT_EQ2 : '<>';
 PLUS_PLUS: '++' ;
 MINUS_MINUS:'--' ;
 QUESTION_MARK : '?';
-XOR:'^';
 
 
 // http://www.sqlite.org/lang_keywords.html

@@ -20,6 +20,7 @@ import Java.AST.Table_Constraint.IndexedColumn;
 import Java.AST.Table_Constraint.TableConstraintPrimaryKey;
 import Java.AST.expr.*;
 import Java.AST.commn_classes_Sql.name_rule.*;
+import Java.AST.function.Sub_function_body;
 import Java.AST.instruction.Print_rule.Inside_the_print;
 import Java.AST.instruction.Print_rule.Print;
 import Java.AST.instruction.Returning.returnes_rule;
@@ -1128,18 +1129,38 @@ public class BaseVisitor extends SQLBaseVisitor {
         System.out.println("visit function body");
         function_body function_body = new function_body();
         instructions ins ;
-        for(int i =0 ; i<ctx.sub_function_body().instructions().size() ; i++)
+        for(int i =0 ; i<ctx.children.size(); i++)
         {
-            function_body.addInstraction(visitInstructions(ctx.sub_function_body().instructions(i)));
+            if( ctx.instructions(i) != null){
+            function_body.addInstraction(visitInstructions(ctx.instructions(i)));
+            }
+            else if (ctx.sub_function_body(i) != null) {
+                Sub_function_body(ctx.sub_function_body(i),function_body);
+            }
         }
-        for(int i =0 ; i<ctx.sub_function_body().instructions().size() ; i++)
+        /*        for(int i =0 ; i<ctx.sub_function_body(i).instructions().size() ; i++)
         {
             // System.out.println("------------------"+function_body.getInstructions().get(i).getInstrucation_name());
-         /* System.out.println(((While_Rule)function_body.getInstructions().get(2)).getBoolean_infunction_statment()
+          System.out.println(((While_Rule)function_body.getInstructions().get(2)).getBoolean_infunction_statment()
                   .getBoolean_exprs().get(0).getBoolean_exprs_list().get(0).getTermenal_node());
-            System.out.println("return rule test :"+((if_else)function_body.getInstructions().get(0)).getLoop());*/
-        }
+            System.out.println("return rule test :"+((if_else)function_body.getInstructions().get(0)).getLoop());
+        }*/
         return function_body;
+    }
+
+
+    public void Sub_function_body (SQLParser.Sub_function_bodyContext ctx , function_body function_body){
+        Sub_function_body sub_function_body = new Sub_function_body();
+        for (int i = 0; i < ctx.children.size() ; i++) {
+            if(ctx.instructions(i) != null)
+            {
+                function_body.addInstraction(visitInstructions(ctx.instructions(i)));
+            }
+            else if(ctx.sub_function_body(i) != null){
+                Sub_function_body(ctx.sub_function_body(i),function_body);
+            }
+
+        }
     }
 
     @Override
@@ -1270,7 +1291,6 @@ public class BaseVisitor extends SQLBaseVisitor {
             {
                 System.out.println( " value in index "+i+leftvalue.getID().get(i).getText());
             }
-
         }
         if(ctx.array_objects_form()!=null)
         {
@@ -1295,7 +1315,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         {
 
             j.add(visitJson_statment(ctx.json_statment(i)));
-            System.out.println("value of json statment in list "+"in the index "+i+ctx.json_statment(i).getText().toString());
+            System.out.println("value of json statment in list "+"in the index "+i+ctx.json_statment(i).getText());
         }
         return j;
     }
@@ -1427,15 +1447,7 @@ public class BaseVisitor extends SQLBaseVisitor {
             t.setTt(ctx.K_NULL().getSymbol());
             System.out.println(" visit null " + ctx.K_NULL().getSymbol().getText());
         }
-        if (ctx.arithmetic_expr() != null) {
-            System.out.println(" visit arthmatic  ");
-            t.setArithmatic(visitArithmetic_expr(ctx.arithmetic_expr()));
 
-        }
-        if (ctx.arithmetic_infunction_statment() != null) {
-            System.out.println(" visit arithmatic infunction ");
-            t.setArithmatic(visitArithmetic_expr(ctx.arithmetic_expr()));
-        }
         if (ctx.array_base_form_with_index() != null) {
             System.out.println(" visit array base form ");
             t.setWihindex(visitArray_base_form_with_index(ctx.array_base_form_with_index()));
@@ -1459,17 +1471,15 @@ public class BaseVisitor extends SQLBaseVisitor {
             System.out.println(" visit assign variable");
             t.setV(visitAssign_varible(ctx.assign_varible()));
         }
-        if(ctx.boolean_infunction_statment()!=null)
+        if(ctx.expression()!=null)
         {
             System.out.println("visit boolean ");
-            t.setBooleanes(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
+            t.setExpression(visitExpression(ctx.expression()));
         }
         if(ctx.varible_name() != null){
             System.out.println("visit variable name in return type");
             t.setName(visitUse_random_name(ctx.varible_name().use_random_name()));
         }
-
-
 
         return t ;
     }
@@ -1628,11 +1638,8 @@ public class BaseVisitor extends SQLBaseVisitor {
         }
         else if(ctx.nonfunctional_instruction() != null)
         {
-            if(ctx.nonfunctional_instruction().arithmetic_infunction_statment() != null)
-            {
-                instructions = visitArithmetic_infunction_statment(ctx.nonfunctional_instruction().arithmetic_infunction_statment());
-            }
-            else if (ctx.nonfunctional_instruction().grnral_creating() != null)
+
+             if (ctx.nonfunctional_instruction().grnral_creating() != null)
             {
                 instructions = visitGrnral_creating(ctx.nonfunctional_instruction().grnral_creating());
             }
@@ -1648,6 +1655,9 @@ public class BaseVisitor extends SQLBaseVisitor {
             {
                 instructions = visitPrint_statment(ctx.nonfunctional_instruction().print_statment());
             }
+            else if (ctx.nonfunctional_instruction().shortcut_statments() != null){
+                 instructions = visitShortcut_statments(ctx.nonfunctional_instruction().shortcut_statments());
+             }
         }
         return instructions;
     }
@@ -1657,21 +1667,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         System.out.println("visit if rule");
         if_else ins = new if_else();
         ins.setInstrucation_name(if_else.class.getName());
-        ins.setBoolean_Infunction_Statment(visitBoolean_infunction_statment(ctx.if_rule().boolean_infunction_statment()));
-
-        for (int j = 0; j < ins.getBoolean_Infunction_Statment().getBoolean_exprs().size(); j++) {
-            System.out.print("boolean expr number :" + j + "    ");
-            for (int i = 0; i < ins.getBoolean_Infunction_Statment().getBoolean_exprs().get(j).getBoolean_exprs_list().size(); i++) {
-
-                if (ins.getBoolean_Infunction_Statment().getBoolean_exprs().get(j).getBoolean_exprs_list().get(i).getTermenal_node() != null) {
-                    System.out.print(ins.getBoolean_Infunction_Statment().getBoolean_exprs().get(j).getBoolean_exprs_list().get(i).getTermenal_node().toString());
-                } else if(ins.getBoolean_Infunction_Statment().getBoolean_exprs().get(j).getBoolean_exprs_list().get(i).getVariable_name() != null){
-                    System.out.print(ins.getBoolean_Infunction_Statment().getBoolean_exprs().get(j).getBoolean_exprs_list().get(i).getVariable_name().toString());
-                }
-            }
-            System.out.println();
-        }
-
+        ins.setExpression(visitExpression(ctx.if_rule().expression()));
 
 
         if(ctx.if_rule() != null){
@@ -1688,12 +1684,12 @@ public class BaseVisitor extends SQLBaseVisitor {
             }
         if(ctx.else_if_rule() != null){
             for(int i =0 ; i<ctx.else_if_rule().size() ; i++) {
-                //System.out.println("hiiiiiii" + ctx.else_if_rule().size() );
                 System.out.println("visit else_if");
                 else_if_rule else_if_rule = new else_if_rule();
+                else_if_rule.setExpression(visitExpression(ctx.else_if_rule(i).expression()));
                 ins.add_Else_if_rule_in_if(else_if_rule);
 
-                    System.out.println("else if:"+ ins.getElse_if());
+                    System.out.println(" visit else if:");
                 for(int j =0 ; j < ctx.else_if_rule().get(i).instructions().size() ; j++) {
                     //System.out.println("j:"+j );
                     else_if_rule.addinstruction(visitInstructions(ctx.else_if_rule().get(i).instructions().get(j)));
@@ -1715,7 +1711,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         return ins;
     }
 
-    @Override
+    /*@Override
     public One_line_if visitOne_line_if_statment_rule(SQLParser.One_line_if_statment_ruleContext ctx) {
         System.out.println("visit inside one line if");
         One_line_if one_line_if = new One_line_if();
@@ -1727,7 +1723,7 @@ public class BaseVisitor extends SQLBaseVisitor {
     @Override
     public Object visitInside_one_line_function(SQLParser.Inside_one_line_functionContext ctx) {
         return super.visitInside_one_line_function(ctx);
-    }
+    }*/
 
     @Override
     public instructions visitPrint_statment(SQLParser.Print_statmentContext ctx) {
@@ -1790,7 +1786,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         System.out.println("visit do while");
         do_while ins = new do_while();
         ins.setInstrucation_name(do_while.class.getName());
-        ins.setBoolean_infunction_statment(visitBoolean_infunction_statment(ctx.while_rule().boolean_infunction_statment()));
+        ins.setExpression(visitExpression(ctx.while_rule().expression()));
         for (int i = 0; i <ctx.instructions().size() ; i++) {
             ins.addinstruction(visitInstructions(ctx.instructions(i)));
         }
@@ -1802,9 +1798,9 @@ public class BaseVisitor extends SQLBaseVisitor {
         System.out.println("visit for rule");
         For_Loop_Rule for_loop_rule = new For_Loop_Rule();
         for_loop_rule.setInstrucation_name(For_Loop_Rule.class.getName());
-        if(ctx.boolean_infunction_statment() != null)
+        if(ctx.expression() != null)
         {
-            for_loop_rule.setBoolean_infunction_statment(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
+            for_loop_rule.setExpression(visitExpression(ctx.expression()));
         }
         if(ctx.inside_for_loop(0) != null)
         {
@@ -1846,7 +1842,7 @@ public class BaseVisitor extends SQLBaseVisitor {
         System.out.println("visit while");
         While_Rule ins = new While_Rule();
         ins.setInstrucation_name(While_Rule.class.getName());
-        ins.setBoolean_infunction_statment(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
+        ins.setExpression(visitExpression(ctx.expression()));
         return ins;
     }
 
@@ -1909,7 +1905,7 @@ public class BaseVisitor extends SQLBaseVisitor {
 
     @Override
     public assignment visitGenral_assign(SQLParser.Genral_assignContext ctx) {
-        System.out.println("general creating");
+        System.out.println("general assign");
         assignment ins = new assignment();
         ins.setInstrucation_name(assignment.class.getName());
 
@@ -1930,15 +1926,11 @@ public class BaseVisitor extends SQLBaseVisitor {
 
     @Override
     public assign_variable visitAssign_varible(SQLParser.Assign_varibleContext ctx) {
-        System.out.println("visit variable creating");
+        System.out.println("visit variable assign");
         assign_variable var = new assign_variable();
-        if(ctx.arithmetic_expr() != null)
+        if(ctx.expression() != null)
         {
-            var.setArithmatic_expr(visitArithmetic_expr(ctx.arithmetic_expr()));
-        }
-         if (ctx.boolean_infunction_statment() != null)
-        {
-            var.setBoolean_infunction_statment(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
+            var.setExpression(visitExpression(ctx.expression()));
         }
          if (ctx.use_random_name() != null)
         {
@@ -1978,13 +1970,9 @@ public class BaseVisitor extends SQLBaseVisitor {
                 arry.getArray_base_form_with_operetors().add(array_base_form_with_operetor);
             }
         }
-        if(ctx.arithmetic_expr() != null)
+        if(ctx.expression() != null)
         {
-            arry.setArithmatic_expr(visitArithmetic_expr(ctx.arithmetic_expr()));
-        }
-        else if(ctx.boolean_infunction_statment() != null)
-        {
-            arry.setBoolean_infunction_statment(visitBoolean_infunction_statment(ctx.boolean_infunction_statment()));
+            arry.setExpression(visitExpression(ctx.expression()));
         }
         return arry;
     }
@@ -2006,25 +1994,290 @@ public class BaseVisitor extends SQLBaseVisitor {
                         array_base_form_variables.setVariable_name(visitUse_random_name(ctx.varible_name().get(j).use_random_name()));
                     }
                 }
-                for (int i = 0; i <ctx.arithmetic_expr().size() ; i++) {
+                for (int i = 0; i <ctx.expression().size() ; i++) {
 
-                    if(ctx.arithmetic_expr().get(j) != null)
+                    if(ctx.expression().get(j) != null)
                     {
-                        array_base_form_variables.setArithmatic_expr(visitArithmetic_expr(ctx.arithmetic_expr().get(j)));
+                        array_base_form_variables.setExpression(visitExpression(ctx.expression().get(j)));
                     }
                 }
-                for (int i = 0; i < ctx.arithmetic_infunction_statment().size(); i++) {
-                     if(ctx.arithmetic_infunction_statment().get(j) != null)
+               /* for (int i = 0; i < ctx.expression().size(); i++) {
+                     if(ctx.expression().get(j) != null)
                     {
                         array_base_form_variables.setArithmetic_infunction_statment(visitArithmetic_infunction_statment(ctx.arithmetic_infunction_statment().get(j)));
                     }
-                }
+                }*/
                 array_base_with_index.getArray_base_form_variables().add(array_base_form_variables);
             }
         return array_base_with_index;
     }
 
-    ArrayList<SQLParser.Arithmetic_exprContext> arithmetic_expr_tree = new ArrayList<>();
+
+
+    @Override
+    public Expression visitExpression(SQLParser.ExpressionContext ctx){
+        Expression expression = new Expression();
+        //cleanExpressionTree(ctx);
+        expression.setExpression_list(expression_algorthim(ctx));
+        int x = 1 , y = 2 ,z = 3 ;
+        System.out.println("visit expression");
+
+
+        return expression;
+    }
+    public Expression_List expression_algorthim(SQLParser.ExpressionContext ctx  ){
+        Expression_List expression_list = new Expression_List();
+        if(ctx.children.size() == 1 ){
+            expression_list.setIntral_expression_value(visitIntral_expression_value(ctx.intral_expression_value()));
+        }
+        else if(ctx.expression().size() == 2){
+
+            setOprator(ctx , expression_list);
+
+
+            expression_list.setLeft_expr(expression_algorthim(ctx.expression(0)));
+            expression_list.setRight_expr(expression_algorthim(ctx.expression(1)));
+        }
+        else if (ctx.PLUS_PLUS() != null || ctx.MINUS_MINUS() != null  ){
+            expression_list.setShortcut_statments(shortcut_Statments_Expression(ctx));
+        }
+        else if(!ctx.OPEN_PAR().isEmpty())
+        {
+
+            Bracket_Expression bracket_expression = new Bracket_Expression();
+            if(!ctx.expression().isEmpty()){
+
+                bracket_expression.setExpression_list(expression_algorthim(ctx.expression(0)));
+            }
+            else if (ctx.genral_assign() != null)
+            {
+                bracket_expression.setAssign(visitGenral_assign(ctx.genral_assign()));
+            }
+            expression_list.setBracket_expression(bracket_expression);
+        }
+        else if ( ctx.expression().size() == 3){
+            One_Line_If_Expression one_line_if_expression = new One_Line_If_Expression();
+            one_line_if_expression.setBoolean_condition(expression_algorthim(ctx.expression(0)));
+            one_line_if_expression.setFirstelement(expression_algorthim(ctx.expression(1)));
+            one_line_if_expression.setSecond_element(expression_algorthim(ctx.expression(2)));
+            expression_list.setOne_line_if_expression(one_line_if_expression);
+            System.out.println("visit one line if");
+        }
+        else if (ctx.unary_operator() != null) {
+            Unaray_Operator_Java unaray_operator_java = new Unaray_Operator_Java();
+            unaray_operator_java.setOp(ctx.unary_operator().getText());
+            unaray_operator_java.setExpression_list(expression_algorthim(ctx.expression(0)));
+            expression_list.setUnaray_operator_java(unaray_operator_java);
+        }
+
+        return expression_list;
+    }
+    public void setOprator(SQLParser.ExpressionContext ctx  , Expression_List expression_list){
+
+        if(ctx.PLUS() != null ) {
+            expression_list.setOp(ctx.PLUS().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.MINUS() != null)
+        {
+            expression_list.setOp(ctx.MINUS().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.STAR() != null)
+        {
+            expression_list.setOp(ctx.STAR().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+
+        }
+        else if (ctx.DIV() != null)
+        {
+            expression_list.setOp(ctx.DIV().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+
+        }
+        else if (ctx.MOD() != null)
+        {
+            expression_list.setOp(ctx.MOD().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.LT2() != null)
+        {
+            expression_list.setOp(ctx.LT2().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.GT2() != null)
+        {
+            expression_list.setOp(ctx.GT2().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.GT3() != null)
+        {
+            expression_list.setOp(ctx.GT3().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.LT() != null)
+        {
+            expression_list.setOp(ctx.LT().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.GT() != null)
+        {
+            expression_list.setOp(ctx.GT().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.GT_EQ() != null)
+        {
+            expression_list.setOp(ctx.GT_EQ().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.LT_EQ() != null)
+        {
+            expression_list.setOp(ctx.LT_EQ().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.EQ() != null)
+        {
+            expression_list.setOp(ctx.EQ().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.NOT_EQ1() != null)
+        {
+            expression_list.setOp(ctx.NOT_EQ1().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.AMP() != null)
+        {
+            expression_list.setOp(ctx.AMP().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.PIPE() != null)
+        {
+            expression_list.setOp(ctx.PIPE().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.AMP2() != null)
+        {
+            expression_list.setOp(ctx.AMP2().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+        else if (ctx.PIPE2() != null)
+        {
+            expression_list.setOp(ctx.PIPE2().toString());
+            System.out.println("opretor :"+expression_list.getOp());
+        }
+    }
+    public void cleanExpressionTree(SQLParser.ExpressionContext ctx){
+
+                if(!ctx.OPEN_PAR().isEmpty()){
+                    RuleContext expressionContext = ctx.expression(0);
+                    expressionContext.setParent(ctx);
+                    System.out.println(ctx.children.get(0).getClass());
+                    ctx.removeLastChild();
+                    ctx.removeLastChild();
+                    ctx.removeLastChild();
+
+                    for (int i = 0; i <expressionContext.getChildCount() ; i++) {
+
+                    //ctx.addChild((RuleContext) expressionContext.getChild(i));
+                    }
+                }
+
+
+        if(ctx.expression(0) != null)
+            cleanExpressionTree(ctx.expression(0));
+        if(ctx.expression(1) != null)
+            cleanExpressionTree(ctx.expression(1));
+
+    }
+    public Shortcut_Statments shortcut_Statments_Expression(SQLParser.ExpressionContext ctx){
+        Shortcut_Statments shortcut_statments = new Shortcut_Statments();
+
+        shortcut_statments.setShortcut_statment(ctx.getText());
+        System.out.println("shortcut stored : "+shortcut_statments.getShortcut_statment());
+
+        return shortcut_statments;
+
+
+    }
+    @Override
+    public Intral_Expression_Value visitIntral_expression_value(SQLParser.Intral_expression_valueContext ctx){
+        Intral_Expression_Value intral_expression_value = new Intral_Expression_Value();
+
+        if(ctx.array_base_form_with_index() != null){
+            intral_expression_value.setArray_Base_Form_With_Index(visitArray_base_form_with_index(ctx.array_base_form_with_index()));
+        }
+        else if(ctx.varible_name() != null)
+        {
+            intral_expression_value.setVariable_name(visitVarible_name(ctx.varible_name()));
+        }
+        else if(ctx.IDENTIFIER() != null)
+        {
+            intral_expression_value.setIdentyfire(ctx.getText());
+            System.out.println("String stored : "+intral_expression_value.getIdentyfire());
+
+        }
+        else if(ctx.K_FALSE() != null)
+        {
+            intral_expression_value.setTure_or_False(ctx.getText());
+            System.out.println("false stored : " + intral_expression_value.getTure_or_False());
+
+        }
+        else if(ctx.K_TRUE() != null)
+        {
+            intral_expression_value.setTure_or_False(ctx.getText());
+            System.out.println("true stored : " + intral_expression_value.getTure_or_False());
+
+        }
+        else if(ctx.NUMERIC_LITERAL() != null){
+            intral_expression_value.setNUMERIC_LITERAL(ctx.getText());
+            System.out.println("number stored : " + intral_expression_value.getNUMERIC_LITERAL());
+
+        }
+        else if(ctx.call_function() != null){
+            intral_expression_value.setCall_function(visitCall_function(ctx.call_function()));
+
+        }
+        else  if (ctx.ONE_CHAR_LETTER() != null)
+        {
+            intral_expression_value.setONE_CHAR_LETTER(ctx.getText().charAt(0));
+            System.out.println("Char stored : " + intral_expression_value.getONE_CHAR_LETTER());
+
+        }
+        else if (ctx.varible_from_object() != null)
+        {
+            intral_expression_value.setVariable_From_Object(visitVarible_from_object(ctx.varible_from_object()));
+        }
+
+
+
+        return intral_expression_value;
+
+    }
+    @Override
+    public Variable_Name visitVarible_name(SQLParser.Varible_nameContext ctx){
+        Variable_Name variable_name = new Variable_Name();
+
+         variable_name.setVariable_name(ctx.getText());
+        System.out.println("variable stored : " + variable_name.getVariable_name());
+
+
+        return variable_name;
+    }
+    @Override
+    public Shortcut_Statments visitShortcut_statments(SQLParser.Shortcut_statmentsContext ctx){
+        Shortcut_Statments shortcut_statments = new Shortcut_Statments();
+
+        shortcut_statments.setShortcut_statment(ctx.getText());
+        System.out.println("Shortcut statment stored : " + shortcut_statments.getShortcut_statment());
+
+
+
+        return shortcut_statments;
+    }
+
+    /*
+
+    ArrayList<SQLParser.expressionContext> arithmetic_expr_tree = new ArrayList<>();
     ArrayList<SQLParser.Arithmetic_exprContext> arithmetic_expr_tree_op = new ArrayList<>();
     Stack<SQLParser.Boolean_exprContext> boolean_expr_tree = new Stack<>();
     @Override
@@ -2038,19 +2291,19 @@ public class BaseVisitor extends SQLBaseVisitor {
 
         expression_algorthim(ctx);
 
-        /*for (int i = 0; i < arithmatic_expr.getArithmatic_exprs_list().size(); i++) {
+        for (int i = 0; i < arithmatic_expr.getArithmatic_exprs_list().size(); i++) {
             if(arithmatic_expr.getArithmatic_exprs_list().get(i).getTermenal_node() != null)
                 System.out.print(arithmatic_expr.getArithmatic_exprs_list().get(i).getTermenal_node() + " ");
             else if (arithmatic_expr.getArithmatic_exprs_list().get(i).getVariable_name() != null)
                 System.out.print(arithmatic_expr.getArithmatic_exprs_list().get(i).getVariable_name()+ " ");
-        }*/
+        }
         for (int i = 0; i < arithmatic_expr.getArithmatic_exprs_list().size(); i++) {
             if(arithmatic_expr.getArithmatic_exprs_list().get(i).getTermenal_node() != null)
                 System.out.print(arithmatic_expr.getArithmatic_exprs_list().get(i).getTermenal_node() + " " );
             if(arithmatic_expr.getArithmatic_exprs_list().get(i).getVariable_name() != null)
                 System.out.print(arithmatic_expr.getArithmatic_exprs_list().get(i).getVariable_name()+ " ");
         }
-        /*
+
         while (!arithmetic_expr_tree.isEmpty())
         {
 
@@ -2069,7 +2322,7 @@ public class BaseVisitor extends SQLBaseVisitor {
                 arithmatic_expr.getArithmatic_exprs_list().add(termenal_expr);
             }
             System.out.println();
-        }*/
+        }
                   return arithmatic_expr;
 
     }
@@ -2113,34 +2366,7 @@ public class BaseVisitor extends SQLBaseVisitor {
             level++;
         }
     }
-    public void expression_algorthim(SQLParser.Arithmetic_exprContext ctx  ){
-        Expression_List expression_list = new Expression_List();
-        if(ctx.arithmetic_expr() != null) {
-            for (int i = 0; i < ctx.arithmetic_expr().size(); i++) {
 
-                Expression_List left_expr = new Expression_List();
-                Expression_List right_expr = new Expression_List();
-
-                if(i ==  0 ){
-                    expression_list.setLeft_expr(left_expr);
-
-
-                }
-                if(i == 1){
-
-                    expression_list.setRight_expr(right_expr);
-                }
-            }
-        }
-    }
-    public void setOprator(SQLParser.Arithmetic_exprContext ctx  , Expression_List expression_list){
-        if(ctx.PLUS() != null){
-            expression_list.setOp(ctx.PLUS().toString());
-        }
-        else if(ctx.STAR() != null){
-            expression_list.setOp(ctx.STAR().toString());
-        }
-    }
 
     private Arithmatic_expr Arithmatics( Arithmatic_expr arithmatic_expr){
         for (int i = 0; i <arithmetic_expr_tree.size(); i++) {
@@ -2397,6 +2623,7 @@ public class BaseVisitor extends SQLBaseVisitor {
 
         return boolean_infunction_statment;
     }
+    */
 
     @Override
     public instructions visitSwitch_rule(SQLParser.Switch_ruleContext ctx) {
@@ -2424,19 +2651,19 @@ public class BaseVisitor extends SQLBaseVisitor {
         {
             ins.setTermenal_node(ctx.varible_from_object().getText());
         }
-        else if (ctx.arithmetic_expr() != null)
+        else if (ctx.expression() != null)
         {
-            ins.setArithmatic_expr(visitArithmetic_expr(ctx.arithmetic_expr()));
+            ins.setExpression(visitExpression(ctx.expression()));
         }
-        else if (ctx.arithmetic_infunction_statment() != null)
+       /* else if (ctx.expression() != null)
         {
             ins.setArithmetic_infunction_statment(visitArithmetic_infunction_statment(ctx.arithmetic_infunction_statment()));
-        }
+        }*/
 
         if(ctx.case_rule() != null)
-        for (int i = 0; i < ctx.case_rule().size(); i++) {
-            ins.getCases().add(visitCase_rule(ctx.case_rule(i)));
-        }
+            for (int i = 0; i < ctx.case_rule().size(); i++) {
+                ins.getCases().add(visitCase_rule(ctx.case_rule(i)));
+            }
         if(ctx.defult() != null)
         {
             ins.setDeafult(visitDefult(ctx.defult()));
@@ -2451,6 +2678,9 @@ public class BaseVisitor extends SQLBaseVisitor {
 
         if(ctx.any_name() != null){
             case_ins.setVariable_name(ctx.any_name().getText());
+        }
+        else if (ctx.expression() != null){
+            case_ins.setExpression(visitExpression(ctx.expression()));
         }
         else if(ctx.NUMERIC_LITERAL() != null)
         {

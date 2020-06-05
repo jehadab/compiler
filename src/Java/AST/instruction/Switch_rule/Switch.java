@@ -1,5 +1,6 @@
 package Java.AST.instruction.Switch_rule;
 
+import Java.AST.expr.Expression;
 import Java.AST.instruction.arithmetic_infunction_statment;
 import Java.AST.expr.Arithmatic_expr;
 import Java.AST.instruction.non_functional_instructions;
@@ -32,22 +33,6 @@ public class Switch extends non_functional_instructions  {
         this.termenal_node = termenal_node;
     }
 
-    public Java.AST.instruction.arithmetic_infunction_statment getArithmetic_infunction_statment() {
-        return arithmetic_infunction_statment;
-    }
-
-    public void setArithmetic_infunction_statment(Java.AST.instruction.arithmetic_infunction_statment arithmetic_infunction_statment) {
-        this.arithmetic_infunction_statment = arithmetic_infunction_statment;
-    }
-
-    public Arithmatic_expr getArithmatic_expr() {
-        return arithmatic_expr;
-    }
-
-    public void setArithmatic_expr(Arithmatic_expr arithmatic_expr) {
-        this.arithmatic_expr = arithmatic_expr;
-    }
-
     public List<Case> getCases() {
         return cases;
     }
@@ -64,10 +49,18 @@ public class Switch extends non_functional_instructions  {
         this.deafult = deafult;
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(Expression expression) {
+        this.expression = expression;
+    }
+
+    Expression expression;
+
     String variable_name;
     String termenal_node;
-    arithmetic_infunction_statment arithmetic_infunction_statment;
-    Arithmatic_expr arithmatic_expr;
 
     List<Case>cases ;
     Deafult deafult ;
