@@ -5,27 +5,25 @@ import Java.AST.create.generalcreating;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // could have error in the functionbody ....
 public class function_body extends Node {
 
-    public function_body(){
-        this.instructions = new ArrayList<>();
+
+    public List<Object> getInstructions() {
+        return nodes;
     }
 
-    public List<Java.AST.instruction.instructions> getInstructions() {
-        return instructions;
+    public void setlist(List<Object> instructions) {
+        this.nodes = instructions;
     }
-
-    public void setInstructions(List<Java.AST.instruction.instructions> instructions) {
-        this.instructions = instructions;
-    }
-    public void addInstraction(instructions instruction){
-        this.instructions.add(instruction);
+    public void addNode(Object Node){
+        this.nodes.add(Node);
     }
 
 
-    List<instructions> instructions ;
+    List<Object> nodes = new ArrayList<Object>();
 
 
 

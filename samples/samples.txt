@@ -3,26 +3,8 @@ func() {
 if(x == 2 ) {
 
 }
-else {
-i++;
-}
-do {
-}while (w > o++);
-x++;
-
-for (x = 5 ; y++ ; --y){}
-
-while (u){
-}
-
-
-
-a[5] = m;
-
-switch (r){
-case (l):
-
-}
+i--;
+{b = 5;}
 
 
 
